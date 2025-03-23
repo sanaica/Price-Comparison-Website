@@ -2,6 +2,8 @@ import requests  # Import the 'requests' module to fetch data from websites
 from bs4 import BeautifulSoup  # Import BeautifulSoup to parse HTML
 import time # Waiting
 import random  # Import random module for varied sleep time
+from PIL import Image  # For displaying images
+import io  # For handling image data
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     'Accept-Language': 'en-US,en;q=0.9',
@@ -48,13 +50,27 @@ def search_amazon(product_name, num_products):
         delivery = product.select_one('.s-align-children-center').get_text(strip=True)
     except AttributeError:
         delivery = "N/A"
+    try:
+            image_url = product.select_one('img.s-image')['src']  # Extract product image
+    except (AttributeError, TypeError):
+            image_url = "N/A"
     # 🔹 Move print statements inside the loop
     print(f"\n📌 Amazon Product {i+1}:")
     print(f"🛒 Name: {name}")
     print(f"💰 Price: {price}")
     print(f"📄 Description: {description}")
     print(f"🚚 Delivery: {delivery}")
+    print(f"🖼 Image URL: {image_url}")
+    if image_url:
+            display_image(image_url)
+def display_image(image_url):
+    try:
+        response = requests.get(image_url)
+        image = Image.open(io.BytesIO(response.content))
+        image.show()  # Open the image in default image viewer
+    except Exception as e:
+        print(f"⚠️ Error loading image: {e}")
 if __name__ == "__main__":
     product_name = input("Enter product name: ")
-    num_products = int(input("How many products to fetch? "))
+    num_products = int(input("Enter which number product you want "))
     search_amazon(product_name, num_products)
