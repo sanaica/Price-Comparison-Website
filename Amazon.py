@@ -74,4 +74,3 @@ if __name__ == "__main__":
     product_name = input("Enter product name: ")
     num_products = int(input("Enter which number product you want "))
     search_amazon(product_name, num_products)
-print("Testing error again")
