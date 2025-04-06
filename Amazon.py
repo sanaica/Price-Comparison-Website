@@ -1,1 +1,0 @@
-The werk is riyal
